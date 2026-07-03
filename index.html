@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Profit/Loss Calculator</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --accent-color: #3b82f6;
+            --success: #22c55e;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .calculator-container {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #fff;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #94a3b8;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            background-color: #0f172a;
+            color: #fff;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #2563eb;
+        }
+
+        .results {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #334155;
+            display: none;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .profit {
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .loss {
+            color: var(--danger);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="calculator-container">
+    <h2>Crypto Profit Calculator</h2>
+    
+    <div class="input-group">
+        <label for="investment">Investment Amount ($)</label>
+        <input type="number" id="investment" placeholder="e.g., 1000" step="any">
+    </div>
+    
+    <div class="input-group">
+        <label for="buyPrice">Buy Price ($)</label>
+        <input type="number" id="buyPrice" placeholder="e.g., 50000" step="any">
+    </div>
+    
+    <div class="input-group">
+        <label for="sellPrice">Sell Price ($)</label>
+        <input type="number" id="sellPrice" placeholder="e.g., 55000" step="any">
+    </div>
+    
+    <button onclick="calculateProfit()">Calculate</button>
+    
+    <div class="results" id="resultsSection">
+        <div class="result-row">
+            <span>Total Return:</span>
+            <span id="totalReturn">$0.00</span>
+        </div>
+        <div class="result-row">
+            <span>Profit / Loss:</span>
+            <span id="netProfit">$0.00</span>
+        </div>
+        <div class="result-row">
+            <span>Percentage Change:</span>
+            <span id="percentage">0.00%</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    function calculateProfit() {
+        const investment = parseFloat(document.getElementById('investment').value);
+        const buyPrice = parseFloat(document.getElementById('buyPrice').value);
+        const sellPrice = parseFloat(document.getElementById('sellPrice').value);
+        
+        if (isNaN(investment) || isNaN(buyPrice) || isNaN(sellPrice) || buyPrice <= 0) {
+            alert("Please enter valid numbers in all fields.");
+            return;
+        }
+        
+        // Calculation Logic
+        const cryptoAmount = investment / buyPrice;
+        const totalReturn = cryptoAmount * sellPrice;
+        const netProfit = totalReturn - investment;
+        const percentageChange = (netProfit / investment) * 100;
+        
+        // Display Results
+        document.getElementById('totalReturn').innerText = `$${totalReturn.toFixed(2)}`;
+        
+        const profitElement = document.getElementById('netProfit');
+        const percentElement = document.getElementById('percentage');
+        
+        if (netProfit >= 0) {
+            profitElement.innerText = `+$${netProfit.toFixed(2)}`;
+            profitElement.className = "profit";
+            percentElement.innerText = `+${percentageChange.toFixed(2)}%`;
+            percentElement.className = "profit";
+        } else {
+            profitElement.innerText = `-$${Math.abs(netProfit).toFixed(2)}`;
+            profitElement.className = "loss";
+            percentElement.innerText = `${percentageChange.toFixed(2)}%`;
+            percentElement.className = "loss";
+        }
+        
+        document.getElementById('resultsSection').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
